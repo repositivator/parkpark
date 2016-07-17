@@ -1,0 +1,24 @@
+@CHARSET "UTF-8";
+textarea {
+    padding: 12px 20px;
+    margin: 10px 10px 10px 10px;
+    box-sizing: border-box;
+    border: 5px solid #ccc;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+}
+
+textarea:focus {
+    border: 5px solid #1BA4E7;
+}
+
+
+#reviewListView{position:relative;}
+.reviewstar .star_comm {display:block;margin:0 auto 2px;width:104px;height:20px;background:url('../img/starscore_3.png') no-repeat;} 
+.reviewstar .star_1 {background-position:-2px -80px;}  
+.reviewstar .star_2 {background-position:-2px -60px;}   
+.reviewstar .star_3 {background-position:-2px -40px;}
+.reviewstar .star_4 {background-position:-2px -20px;} 
+.reviewstar .star_5 {background-position:-2px 0px;}  
+

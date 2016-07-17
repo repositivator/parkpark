@@ -1,0 +1,31 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link href="${path}/resources/css/test.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h1>후기 목록</h1><br/>
+<table class="table table-striped" width="80%">
+			<tr><th>후기 코드</th><th>회원 코드</th><th>주차장코드</th><th>작성자 이름</th><th>작성일</th><th>별점</th><th>내용</th><th>회원관리</th></tr>
+			<c:forEach var="s" items="${evallist}">
+				<tr>
+					<td class=cr6aa7cc>${s.code}</td>
+					<td>${s.m_code}</td>
+					<td>${s.s_code}</td>
+					<td>${s.m_name}</td>
+					<td>${s.e_date}</td>
+					<td>${s.e_score}</td>
+					<td>${s.e_content}</td>
+					<td><input type="button" onclick="adminevalUpdate(${s.code})" id="codeId${s.code}" name="adminevalUpdate" value="수정" class="btn btn-primary"  style="background-color: #1BA4E7; border:0px;">
+ 						<input type="button" onclick="adminevalDelete(${s.code})" id="codeid${s.code}" name="adminevalDelete" value="삭제" class="btn btn-danger" style="border:0px;"></td></tr></td>
+				</tr>
+			</c:forEach>
+		</table>
+</body>
+</html>

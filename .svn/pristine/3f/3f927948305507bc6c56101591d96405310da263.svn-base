@@ -1,0 +1,54 @@
+/**
+ * @FileName	MailSenderCtrl.java
+ * @Project		boots_parkpark
+ * @Author		Dave
+ * @Date		2016. 2. 23.
+ *
+ *******************************************
+ * @EditHistory
+ * @Date         @Author      @Description
+ * 2016. 2. 23.      Dave      - 
+ *******************************************
+ */
+package serviceinfo.controller;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+
+@Controller
+@RequestMapping("serviceinfo/personalContact")
+public class MailSenderCtrl {
+
+	
+	@Autowired(required=false)
+	private MailService service;
+	
+	
+	// http://localhost:8080/boots_parkpark/serviceinfo/personalContact 
+	@RequestMapping(method=RequestMethod.GET)
+	public String form(){
+		return "serviceinfo/personalContact";
+	}
+	
+	@RequestMapping(method=RequestMethod.POST)
+	public String send(Email smail, Model d){
+		smail.setReceiver("repositivator@gmail.com"); 		// 메일 수신자 지정 
+		
+		System.out.println("제목:"+smail.getSubject());
+		System.out.println("내용:"+smail.getContent());
+		System.out.println("연락처:"+smail.getContactPoint());
+		System.out.println("수신자:"+smail.getReceiver());
+		
+		service.sendMail(smail);
+		d.addAttribute("isSnd", "Y");
+		
+		return "serviceinfo/personalContact";
+	}
+		
+
+}

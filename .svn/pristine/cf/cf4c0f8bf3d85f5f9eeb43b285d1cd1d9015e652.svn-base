@@ -1,0 +1,49 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="path" value="${pageContext.request.contextPath }" /> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link href="${path}/resources/css/test.css" rel="stylesheet" type="text/css">
+<script src="${path}/resources/js/parkingList.js"></script>
+<!-- jquery -->
+<script type="text/javascript" src="${path}/resources/js/jquery-1.12.0.min.js"></script>
+</head>
+<body>
+<h1>주차장 목록</h1><br/>
+<!-- 수정하기 버튼의 form -->
+<form name="adminparkingUpdateForm" id="adminparkingUpdateForm" method="post" action="adminparkingUpdateForm">
+	<input type="hidden" name="code">
+</form>
+
+<!-- 삭제하기 버튼의 form -->
+<form name="adminparkingDeleteForm" id="adminparkingDeleteForm" method="post" action="adminparkingDelete">
+	<input type="hidden" name="code">
+</form>
+<table class="table table-striped" width="80%">
+			<tr><th>주차장 코드</th><th>회원 코드</th><th>주차장 이름</th><th>주차장 주소</th><th>전화번호</th><th>주차장 이미지</th><th>요금(30분 당)</th><th>누적 정산금액</th><th>불법주차 신고횟수</th><th>평일</th><th>토요일</th><th>일요일, 공휴일</th><th>주차장관리</th></tr>
+			<c:forEach var="s" items="${parkinglist}">
+				<tr>
+					<td class=cr6aa7cc>${s.code}</td>
+					<td>${s.m_code}</td>
+					<td>${s.s_name}</td>
+					<td>${s.s_address}</td>
+					<td>${s.s_phone}</td>
+					<td>${s.s_image}</td>
+					<td>${s.s_pay}</td>
+					<td>${s.s_income}</td>
+					<td>${s.s_report}</td>
+					<td>${s.weekday_begin_time}~${s.weekday_end_time}</td>
+					<td>${s.saturday_begin_time}~${s.saturday_end_time}</td>
+					<td>${s.holiday_begin_time}~${s.holiday_end_time}</td>
+					<td><input type="button" onclick="adminparkingUpdate(${s.code})" id="codeId${s.code}" name="adminparkingUpdate" value="수정" class="btn btn-primary"  style="background-color: #1BA4E7; border:0px;">
+ 						<input type="button" onclick="adminparkingDelete(${s.code})" id="codeid${s.code}" name="adminparkingDelete" value="삭제" class="btn btn-danger" style="border:0px;"></td></tr></td>
+				</tr>
+			</c:forEach>
+		</table>
+</body>
+</html>

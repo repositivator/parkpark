@@ -1,0 +1,42 @@
+@CHARSET "UTF-8";
+
+.cr6aa7cc {color:#FF0000; font-size:10px;}
+.lPad10 {padding-left:10px;}
+.txtInp {height:18px; padding:5px 10px; font-size:12px; border:1px solid #bbb; color:#666; vertical-align:middle; font-family:verdana, tahoma, dotum, dotumche, '돋움', '돋움체', sans-serif;}
+.crRed {color:red;}
+#signup {position:absolute; top:5%; left:27%; width:70%;}
+input{margin-left:10px;}
+span.radiospan{margin-left:10px;}
+select{margin-left:10px;}
+#agreeUse{margin-left:10px;}
+#agreePrivate{margin-left:10px;}
+#facebook{margin-left:30px;}
+input[type=text] {
+    width: 98%;
+    padding: 12px 20px;
+    margin: 8px 8px 8px 8px;
+    box-sizing: border-box;
+    border: 3px solid #ccc;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+}
+
+input[type=text]:focus {
+    border: 3px solid #1BA4E7;
+}
+
+input[type=password] {
+    width:98%;
+    padding: 12px 20px;
+    margin: 3px 8px 8px 8px;
+    box-sizing: border-box;
+    border: 3px solid #ccc;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+}
+
+input[type=password]:focus {
+    border: 3px solid #1BA4E7;
+}

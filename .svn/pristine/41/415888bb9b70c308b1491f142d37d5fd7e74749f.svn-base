@@ -1,0 +1,274 @@
+
+//지도 설정
+var mapContainer = document.getElementById('map'), // 지도를 표시할 div  
+    mapOption = { 
+        center: new daum.maps.LatLng(mapLat, mapLng), // 지도의 중심좌표 
+        level: 5 // 지도의 확대 레벨 
+    }; 
+
+// 지도 생성
+var map = new daum.maps.Map(mapContainer, mapOption);
+
+
+//공영주차장 마커가 표시될 좌표 배열
+var publicPositions = [];
+for(var i = 0; i < publicDatas.length; i++){
+   publicPositions[i] = new daum.maps.LatLng(publicDatas[i][0], publicDatas[i][1]); //공영주차장 위도, 경도
+   
+}
+
+//공유주차장 마커가 표시될 좌표 배열
+var sharePositions = [];
+for(var i = 0; i < shareDatas.length; i++){
+   sharePositions[i] = new daum.maps.LatLng(shareDatas[i][0], shareDatas[i][1]);  //공유주차장 위도, 경도
+}
+
+//공영주차장 정보가 표시될 좌표 배열
+var publicContents = [];
+for(var i = 0; i < publicDatas.length; i++){
+   publicContents[i] = '<div class="overlay_info">';
+   publicContents[i] += '    <a href="#" target="_blank"><strong>' //이동 시키고 싶은 주소
+   publicContents[i] += publicDatas[i][2];  //주차장명
+   publicContents[i] += ' (총 ' + publicDatas[i][4] + '면)';  //주차가능면수
+   publicContents[i] += '</strong></a>';
+   publicContents[i] += '    <div class="desc">';
+   publicContents[i] += '        <img src="../resources/img/parkinglot_blank3.png" alt="">';
+   publicContents[i] += '        <span class="address">';
+   publicContents[i] += publicDatas[i][3];  //주차장 주소
+   publicContents[i] += '<br>- 최소' + publicDatas[i][6] + '분 ' + publicDatas[i][5] +'원';  //기본요금정보
+   publicContents[i] += '<br>- ' + publicDatas[i][8] + '분당 ' + publicDatas[i][7] +'원';  //추가요금정보
+   publicContents[i] += '        </span>';
+   publicContents[i] += '    </div>';
+   publicContents[i] += '</div>';
+}
+
+//공유주차장 정보가 표시될 좌표 배열
+var shareContents = [];
+
+//공유주차장 화면 표시여부 확인
+var shareInfoOff = [];
+
+
+
+
+for(var i = 0; i < shareDatas.length; i++){
+   shareContents[i] = '<div class="overlay_info"><form id="reviewForm" method="post" action="../reviewint"><input type="hidden" name="emailKey" value="';
+   shareContents[i] += emailKey;
+   shareContents[i] += '"><input type="hidden" name="s_code"/> ';
+   shareContents[i] += '    <a href="#" onclick="reviewWrite(';
+   shareContents[i] += shareDatas[i][6]; //공유주차장 code
+   shareContents[i] += '); return false;"><strong>' //이동 시키고 싶은 주소
+   shareContents[i] += shareDatas[i][2];  //주차장명
+   shareContents[i] += '</strong></a></form>';
+   shareContents[i] += '    <div class="desc">';
+   shareContents[i] += '        <img src="../resources/img_share/';
+   shareContents[i] += shareDatas[i][4];  //이미지이름
+   shareContents[i] += '" style="width: 54px; height: 54px;" alt="">';
+   shareContents[i] += '        <span class="address">';
+   shareContents[i] += shareDatas[i][3];  //주차장 주소
+   shareContents[i] += '<br>- 30분 ';
+   shareContents[i] += shareDatas[i][5];  //기본요금정보
+   shareContents[i] += '원';
+   shareContents[i] += '        </span>';
+   shareContents[i] += '    </div>';
+   shareContents[i] += '</div>';
+}      
+
+var markerImageSrc = '../resources/img/category_3.png';  // 마커이미지의 주소입니다. 스프라이트 이미지 입니다
+    allMarkers = [], // 전체 마커 객체를 가지고 있을 배열입니다
+    shareMarkers = [], // 공유 마커 객체를 가지고 있을 배열입니다
+    publicMarkers = []; // 공영주차장 마커 객체를 가지고 있을 배열입니다
+
+    
+createShareMarkers(); // 공유 마커를 생성하고 공유 마커 배열에 추가합니다
+createPublicMarkers(); // 공영주차장 마커를 생성하고 공영주차장 마커 배열에 추가합니다
+changeMarker('all'); // 지도에 전체 마커가 보이도록 설정합니다    
+
+
+
+
+// 마커이미지의 주소와, 크기, 옵션으로 마커 이미지를 생성하여 리턴하는 함수입니다
+function createMarkerImage(src, size, options) {
+    var markerImage = new daum.maps.MarkerImage(src, size, options);
+    return markerImage;            
+}
+
+// 좌표와 마커이미지를 받아 마커를 생성하여 리턴하는 함수입니다
+function createMarker(position, image) {
+    var marker = new daum.maps.Marker({
+        position: position,
+        image: image,
+       clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
+    });
+    
+    return marker;  
+}   
+   
+
+// 공영주차장------------------------------------------
+
+// 공영주차장 마커를 생성하고 공영주차장 마커 배열에 추가하는 함수입니다
+function createPublicMarkers() {
+    for (var i = 0; i < publicPositions.length; i++) {
+        
+       
+        var imageSize = new daum.maps.Size(22, 26),
+            imageOptions = {   
+                spriteOrigin: new daum.maps.Point(10, 72),    
+                spriteSize: new daum.maps.Size(36, 98)  
+            };       
+     
+        // 마커이미지와 마커를 생성합니다
+        var markerImage = createMarkerImage(markerImageSrc, imageSize, imageOptions),    
+            marker = createMarker(publicPositions[i], markerImage);  
+
+        // 생성된 마커를 공영주차장 마커 배열에 추가합니다
+        publicMarkers.push(marker);        
+ 
+        var customOverlay = new daum.maps.CustomOverlay({
+           content: publicContents[i], // 오버레이에 표시할 내용
+           position: marker.getPosition(),   
+           xAnchor: 0.5, // 커스텀 오버레이의 x축 위치입니다. 1에 가까울수록 왼쪽에 위치합니다. 기본값은 0.5 입니다
+           yAnchor: 1.17 // 커스텀 오버레이의 y축 위치입니다. 1에 가까울수록 위쪽에 위치합니다. 기본값은 0.5 입니다
+        });
+        
+        // 마커에 이벤트를 등록하는 함수 만들고 즉시 호출하여 클로저를 만듭니다
+        // 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
+        (function(marker, customOverlay) {
+            // 마커에 mouseover 이벤트를 등록하고 마우스 오버 시 인포윈도우를 표시합니다 
+            daum.maps.event.addListener(marker, 'mouseover', function() {
+               customOverlay.setMap(map);
+            });
+
+            // 마커에 mouseout 이벤트를 등록하고 마우스 아웃 시 인포윈도우를 닫습니다
+            daum.maps.event.addListener(marker, 'mouseout', function() {
+               customOverlay.setMap(null);
+            });
+            
+        })(marker, customOverlay);
+
+    }                
+}
+
+
+
+
+// 공영주차장 마커들의 지도 표시 여부를 설정하는 함수입니다
+function setPublicMarkers(map) {        
+    for (var i = 0; i < publicMarkers.length; i++) {  
+        publicMarkers[i].setMap(map);
+    }        
+}
+//--------------------------------------------------------------------------
+
+
+//공유주차장--------------------------------------------------------------------
+//공유 마커를 생성하고 공유 마커 배열에 추가하는 함수입니다
+function createShareMarkers() {
+    for (var i = 0; i < sharePositions.length; i++) {
+       // 공유주차장 마크 화면 초기설정 (커스텀레이아웃 off상태)
+       shareInfoOff[i] = true;
+       
+        var imageSize = new daum.maps.Size(22, 26),
+            imageOptions = {   
+                spriteOrigin: new daum.maps.Point(10, 36),    
+                spriteSize: new daum.maps.Size(36, 98)  
+            };       
+     
+        // 마커이미지와 마커를 생성합니다
+        var markerImage = createMarkerImage(markerImageSrc, imageSize, imageOptions),    
+            marker = createMarker(sharePositions[i], markerImage);  
+              
+        // 생성된 마커를 공유 마커 배열에 추가합니다
+        shareMarkers.push(marker);  
+
+
+        var customOverlay = new daum.maps.CustomOverlay({
+           content: shareContents[i], // 오버레이에 표시할 내용
+           position: marker.getPosition(),   
+           xAnchor: 0.5, // 커스텀 오버레이의 x축 위치입니다. 1에 가까울수록 왼쪽에 위치합니다. 기본값은 0.5 입니다
+           yAnchor: 1.17 // 커스텀 오버레이의 y축 위치입니다. 1에 가까울수록 위쪽에 위치합니다. 기본값은 0.5 입니다
+        });
+        
+        // 마커에 이벤트를 등록하는 함수 만들고 즉시 호출하여 클로저를 만듭니다
+        // 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
+        (function(marker, customOverlay) {
+            // 마커에 mouseover 이벤트를 등록하고 마우스 오버 시 인포윈도우를 표시합니다 
+            daum.maps.event.addListener(marker, 'click', function() {
+               if(shareInfoOff[i]){ //현재 표시되고 있는 화면이 없으면
+                  customOverlay.setMap(map); //인포윈도우을 표시하고
+                  shareInfoOff[i] = false;   //인포윈도우 상태를 on으로 설정
+               }else{ //현재 표시되고 있는 화면이 있으면
+                  customOverlay.setMap(null); //인포윈도우를 닫는다
+                  shareInfoOff[i] = true;    //인포윈도우 상태를 on으로 설정   
+               }
+            });
+            
+        })(marker, customOverlay);
+        
+    }        
+}
+
+// 공유 마커들의 지도 표시 여부를 설정하는 함수입니다
+function setShareMarkers(map) {        
+    for (var i = 0; i < shareMarkers.length; i++) {  
+        shareMarkers[i].setMap(map);
+    }        
+}
+//--------------------------------------------------------------------------
+
+// 카테고리를 클릭했을 때 type에 따라 카테고리의 스타일과 지도에 표시되는 마커를 변경합니다
+function changeMarker(type){
+    
+    var allMenu = document.getElementById('allMenu');
+    var shareMenu = document.getElementById('shareMenu');
+    var publicMenu = document.getElementById('publicMenu');
+    
+    // 전체 카테고리가 클릭됐을 때
+    if (type === 'all') {
+    
+        // 전체 카테고리를 선택된 스타일로 변경하고
+        allMenu.className = 'menu_selected';
+        
+        // 공유과 공영주차장 카테고리는 선택되지 않은 스타일로 바꿉니다
+        shareMenu.className = '';
+        publicMenu.className = '';
+        
+        // 전체 마커들이 지도에 표시하도록 설정합니다
+        setShareMarkers(map);
+        setPublicMarkers(map);
+        
+    } else if (type === 'share') { // 공유 카테고리가 클릭됐을 때
+    
+        // 공유 카테고리를 선택된 스타일로 변경하고
+        allMenu.className = '';
+        shareMenu.className = 'menu_selected';
+        publicMenu.className = '';
+        
+        // 공유 마커들만 지도에 표시하도록 설정합니다
+        setShareMarkers(map);
+        setPublicMarkers(null);
+    
+    } else if (type === 'public') { // 공영주차장 카테고리가 클릭됐을 때
+    
+        // 공영주차장 카테고리를 선택된 스타일로 변경하고
+        allMenu.className = '';
+        shareMenu.className = '';
+        publicMenu.className = 'menu_selected';
+        
+        // 공영주차장 마커들만 지도에 표시하도록 설정합니다
+        setShareMarkers(null);
+        setPublicMarkers(map);  
+    }
+    
+    
+function panTo() {
+    // 이동할 위도 경도 위치를 생성합니다 
+    //var moveLatLon = new daum.maps.LatLng(publicDatas[0][0], publicDatas[0][1]);// 지도의 중심좌표(=검색된 첫번째 공영주차장 위치)
+    //alert(publicDatas[0][0], publicDatas[0][1]);
+    // 지도 중심을 부드럽게 이동시킵니다
+    // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+    map.panTo(moveLatLon);
+}     
+
+}

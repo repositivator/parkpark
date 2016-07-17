@@ -1,0 +1,45 @@
+/**
+ * @FileName	ServiceInfoController.java
+ * @Project		boots_parkpark
+ * @Author		Dave
+ * @Date		2016. 2. 22.
+ *
+ *******************************************
+ * @EditHistory
+ * @Date         @Author      @Description
+ * 2016. 2. 22.      Dave      - 
+ *******************************************
+ */
+package serviceinfo.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+
+@Controller
+public class ServiceInfoController {
+	
+	// 서비스 안내 페이지 연결
+	@RequestMapping(value="serviceinfo/serviceInfo")
+	public String serviceInfoPage(){
+		return "serviceinfo/serviceInfo";
+	}
+	
+	// 자주묻는 질문 페이지 연결
+	@RequestMapping(value="serviceinfo/faq")
+	public String frequentlyAskedQuestions(){
+		return "serviceinfo/faq";
+	}
+	
+	// 1:1 문의 페이지 연결 
+	@RequestMapping(value="serviceinfo/personalContact")
+	public String personalContact(){
+		return "serviceinfo/personalContact";
+	}
+	
+	// 공지사항 페이지 연결 
+	@RequestMapping(value="serviceinfo/announceBoard")
+	public String announceBoard(){
+		return "serviceinfo/announceBoard";
+	}
+}

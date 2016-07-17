@@ -1,0 +1,59 @@
+/**
+ * @FileName	ServiceInfoController.java
+ * @Project		boots_parkpark
+ * @Author		Dave
+ * @Date		2016. 2. 22.
+ *
+ *******************************************
+ * @EditHistory
+ * @Date         @Author      @Description
+ * 2016. 2. 22.      Dave      - 
+ *******************************************
+ */
+package serviceinfo.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+//import javax.mail.internet.MimeMessage;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.mail.javamail.JavaMailSender;
+//import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import serviceinfo.model.ServiceDataInter;
+
+
+
+@Controller
+@ComponentScan("serviceinfo.model")
+public class ServiceInfoController {
+	@Autowired ServiceDataInter dataInter;
+
+	// 서비스 안내 페이지 연결
+	@RequestMapping(value="serviceinfo/serviceInfo")
+	public String serviceInfoPage(){
+		return "serviceinfo/serviceInfo";
+	}
+	
+	// 자주묻는 질문 페이지 연결
+	@RequestMapping(value="serviceinfo/faq")
+	public String frequentlyAskedQuestions(){
+		return "serviceinfo/faq";
+	}
+	
+	// 1:1 문의 페이지 연결 
+	@RequestMapping(value="serviceinfo/personalContact")
+	public String personalContact(){
+		return "serviceinfo/personalContact";
+	}
+	
+	// 공지사항 페이지 연결 
+	@RequestMapping(value="serviceinfo/announceBoard")
+	public Model announceBoard(Model model){
+		model.addAttribute("noticeboardlist",dataInter.selectAllnoticeboard());
+		return model;
+	}
+}
+

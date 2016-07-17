@@ -1,0 +1,195 @@
+/**
+ * @FileName   MemberController.java
+ * @Project    parkpark
+ * @Author     Jang HH
+ * @Date       2016. 1. 29.
+ *
+ *******************************************
+ * @EditHistory
+ * @Date         @Author        @Description
+ * 2016. 1. 29.  Jang HH        최초 작성
+ *******************************************
+ */
+
+package member.controller;
+
+import java.io.PrintWriter;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
+
+import member.model.DataInter;
+import member.model.MemberDto;
+import member.model.MemberInter;
+import parkinglot.controller.S_ParkingBean;
+
+@Controller
+@ComponentScan("member.model")
+@SessionAttributes({"emailKey", "codeKey","m_point","myParkingList"}) //각각의 키로 저장된 attribute는 세션객체에 저장 됨 (2016.2.8 / 홍창표)
+public class MemberController {
+	@Autowired
+	private DataInter dataInter;
+	
+	
+	@RequestMapping("member/membership")	//회원가입form으로 넘겨준다
+	public String insForm(){
+		return "startBoot";
+	}
+	
+	//insert
+	@RequestMapping(value="memberinsert", method=RequestMethod.POST) 
+	public String memberInsert(MemberBean bean){
+		dataInter.memberInsert(bean);
+		return "redirect:/index.jsp";
+	}
+	
+	//이메일 중복 확인
+	@RequestMapping(value="member/emailValue", method=RequestMethod.POST)
+	@ResponseBody   //json방식으로 return하려면 필요
+	public boolean checkEmail(MemberBean bean){
+		boolean checkEmail = dataInter.checkEmail(bean); //중복이 아니면 true, 중복이면 false return
+		return checkEmail;
+	}	
+	
+	//로그인 form으로 넘겨준다
+	@RequestMapping("member/login")		
+	public String loginForm(){
+		return "member/login";
+	}
+	
+
+	//로그인(session key값 복수개 담을 수 있고 memberBean 활용) (2016.2.8 / 홍창표)
+	@RequestMapping(value="loginValue", method=RequestMethod.POST)
+	public String checkLogin(MemberBean bean, Model model){	
+		if(bean.getM_email().equals("parkpark@park.com")&& bean.getM_passwd().equals("park1234")){
+			return "admin/adminmain";	//목록보기. 클라이언트의 요청!
+		}	
+		
+		MemberBean memberBean = dataInter.checkLogin(bean); //로그인확인(login여부, 회원코드, 회원이메일 정보를 memberBean에 리턴)
+		if(memberBean==null){	//아이디 비밀번호가 틀린경우	
+		/*	String value = "<script>alert('아이디와 비밀번호를 확인해주세요.');</script>";
+			model.addAttribute("loginValue",value);*/
+			return "member/loginfail";
+		}else{					//로그인 OK
+			model.addAttribute("emailKey", memberBean.getM_email());
+			model.addAttribute("codeKey", memberBean.getCode());
+			model.addAttribute("m_point", memberBean.getM_point());
+			model.addAttribute("myParkingList", dataInter.checkParking(bean)); //내 주차장 정보
+			return "redirect:/index.jsp";
+			}
+		}
+	//로그아웃
+	@RequestMapping("member/logout")
+	public String logoutForm(){
+		return "member/logout";
+	}
+	
+	//비밀번호 체크 후 회원정보수정form으로 보내기
+	@RequestMapping(value="pwdCheck",method=RequestMethod.POST)
+	@ResponseBody
+	public boolean pwdCheck(MemberBean bean){
+		//String re = "";
+		//System.out.println(bean.getM_email());
+		//System.out.println(bean.getM_passwd());
+		boolean pwdCheck = dataInter.pwdCheck(bean);
+		/*
+		if(pwdCheck){	// 비밀번호가 틀린경우(pwdCheck = true)	
+			re = "pwdCheck";
+		}else if(!pwdCheck){		//비밀번호가 일치하는 경우(pwdCheck = false 회원정보 수정 form으로
+			System.out.println(pwdCheck + "비밀번호 일치경우");
+			re = "member/memberUpdate";
+		}
+		
+		return re;
+		*/
+		return pwdCheck;
+	}
+	
+	//회원정보수정form으로 보내기
+	@RequestMapping(value="member/memberUpdate")
+	public String memberUpdateForm(MemberBean bean,Model model){
+		model.addAttribute("updateValue",bean);
+		return "member/memberUpdate";
+	}
+		
+	//회원정보수정
+	@RequestMapping(value="member/memberup")
+	public String memberUpdate(MemberBean bean){
+		dataInter.memberUpdate(bean);
+		return "redirect:../index.jsp";
+	}
+	
+	//회원삭제
+	@RequestMapping(value="member/memberdel")
+	public String memberDelete(String m_email,HttpSession session){
+		dataInter.memberDelete(m_email);
+		return "member/memberDel";
+	}
+	
+	
+	//예약내역보기
+	@RequestMapping("member/myReservation")
+	public Model myReserList(MemberBean bean,Model model){
+		model.addAttribute("reservationlist",dataInter.reserlist(bean));
+		return model;
+	}
+
+   // 내가 등록한 주차장 삭제  (2016.02.22 / 홍창표)
+   @RequestMapping(value="parkinglot/myParkingDelete",method=RequestMethod.POST)
+   public String myParkingDeleteProcess(Model model, S_ParkingBean bean, MemberBean memberBean){
+      boolean b = dataInter.myParkingDelete(bean);
+      if(b){  //삭제 성공하면
+         model.addAttribute("myParkingList", dataInter.checkParking(memberBean)); //수정된 내 주차장 정보를 새로 key값에 담는다.
+         return "parkinglot/myParkingList";   
+         
+      }else{
+    	 model.addAttribute("myParkingList", dataInter.checkParking(memberBean)); //수정된 내 주차장 정보를 새로 key값에 담는다.
+         System.out.println("삭제실패");
+         return "parkinglot/myParkingList";  //추후 삭제 실패화면으로 보낼것
+      }
+   }
+   
+   // 공유주차장 등록  (2016.02.22 / 홍창표)
+   @RequestMapping(value="parkinglot/shareinsert", method=RequestMethod.POST)
+   public String shareInsertProcess(Model model, S_ParkingBean bean, MemberBean memberBean){
+	   boolean b = dataInter.shareInsert(bean);
+	   if(b){ //등록 성공하면
+		   model.addAttribute("myParkingList", dataInter.checkParking(memberBean)); //수정된 내 주차장 정보를 새로 key값에 담는다.
+		   return "parkinglot/myParkingList";
+	   }else{
+		   model.addAttribute("myParkingList", dataInter.checkParking(memberBean)); //수정된 내 주차장 정보를 새로 key값에 담는다.
+		   System.out.println("등록실패");
+		   return "parkinglot/registration"; //추후 등록 실패 화면으로 보낼 것
+	   }
+	}
+
+	
+	// 공유주차장 수정확인 (2016.02.22 / 홍창표)
+	@RequestMapping(value="parkinglot/shareModifyOk", method=RequestMethod.POST)
+	public String shareModifyProcess(Model model, S_ParkingBean bean, MemberBean memberBean){
+		boolean b =	dataInter.shareModify(bean);
+		if(b){ //수정 성공하면
+			model.addAttribute("myParkingList", dataInter.checkParking(memberBean)); //수정된 내 주차장 정보를 새로 key값에 담는다.
+			return "parkinglot/myParkingList";			
+		}else{
+			System.out.println("공유주차장 수정 실패");
+			return "parkinglot/myParkingList";
+		}
+	}
+	
+	/*@RequestMapping("serviceinfo/announceBoard")
+	public Model notiveboardList(Model model){
+		model.addAttribute("noticeboardlist",dataInter.notiveboardList());
+		return model;
+	}*/
+	
+	
+}

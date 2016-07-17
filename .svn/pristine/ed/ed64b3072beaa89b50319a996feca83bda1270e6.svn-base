@@ -1,0 +1,24 @@
+/**
+ * @FileName	ReviewDataInter.java
+ * @Project		parkpark_hh
+ * @Author		user
+ * @Date		2016. 2. 12.
+ *
+ *******************************************
+ * @EditHistory
+ * @Date         @Author      @Description
+ * 2016. 2. 12.      user      - 
+ *******************************************
+ */
+package member.model;
+
+import org.apache.shiro.dao.DataAccessException;
+
+import member.controller.ReviewBean;
+
+public interface ReviewDataInter {
+	ReviewBean getParikgData(String s_code) throws DataAccessException;
+	ReviewBean getMemberData(String emailKey) throws DataAccessException;
+	boolean reviewInsert(ReviewBean bean) throws DataAccessException;
+	boolean pointUpdate(ReviewBean bean) throws DataAccessException;
+}

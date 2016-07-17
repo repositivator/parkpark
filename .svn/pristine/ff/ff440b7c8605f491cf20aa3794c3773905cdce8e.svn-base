@@ -1,0 +1,21 @@
+/**
+ * @FileName	AdminDataInter.java
+ * @Project		boots_parkpark
+ * @Author		user
+ * @Date		2016. 2. 23.
+ *
+ *******************************************
+ * @EditHistory
+ * @Date         @Author      @Description
+ * 2016. 2. 23.      user      - 
+ *******************************************
+ */
+package member.model;
+
+import java.util.List;
+
+import org.apache.shiro.dao.DataAccessException;
+
+public interface AdminDataInter {
+	 List selectAllMember() throws DataAccessException;   //회원데이터
+}

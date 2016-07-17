@@ -1,0 +1,83 @@
+/**
+ * @FileName   SearchController.java
+ * @Project    parkpark
+ * @Author     Hong Changpyo
+ * @Date       2016. 1. 29.
+ *
+ *******************************************
+ * @EditHistory
+ * @Date         @Author        @Description
+ * 2016. 1. 29.  Hong Changpyo     최초 작성
+ *******************************************
+ */
+
+package parkinglot.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import parkinglot.model.DataInter;
+
+@Controller
+@ComponentScan("parkinglot.model")
+public class ParkinglotController {
+	
+	@Autowired
+	private DataInter dataInter;
+
+	//지도화면 : 전체 주차장 출력 (viewfile : map_search.jsp)
+	@RequestMapping("parkinglot/map_search")
+	public Model MapProcess(Model model){
+		model.addAttribute("data",dataInter.p_listAll());  //공영주차장
+		model.addAttribute("data2",dataInter.s_listAll()); //공유주차장
+		return model;
+	}
+
+	//주차장 검색
+	@RequestMapping(value="parkinglot/search",method=RequestMethod.POST)
+	public ModelAndView p_searchProcess(ParkingBean bean){
+		ModelAndView modelAndView = new ModelAndView();
+		List list = dataInter.p_search(bean); //공영주차장 데이터
+		List list2 = dataInter.s_search(bean); //공유주차장 데이터
+		modelAndView.setViewName("parkinglot/map_search");
+		modelAndView.addObject("data", list);  //공영주차장 데이터를  "data" key로 담음
+		modelAndView.addObject("data2", list2); //공유주차장 데이터를 "data2" key로 담음
+		return modelAndView;
+	}
+
+	//주차장 등록화면(viewfile : registration.jsp)
+	@RequestMapping("parkinglot/registration")
+	public Model registrationProcess(Model model){
+		return model;
+	}
+	
+	// 공유주차장 등록
+	@RequestMapping(value="parkinglot/shareinsert", method=RequestMethod.POST)
+	public String shareInsertProcess(S_ParkingBean bean){
+		dataInter.shareInsert(bean);
+		return "parkinglot/registration";
+	}
+	
+	// 우리지역 요금 확인
+	@RequestMapping(value="parkinglot/guValue",method=RequestMethod.POST)
+	@ResponseBody   //json방식으로 return하려면 필요
+	public int checkYogumProcess(YogumBean bean){
+		int pay_avg = dataInter.checkYogum(bean); 
+		return pay_avg;
+	}	
+	
+	// 내가 등록한 주차장 보기 (viewfile : myParkingList.jsp)
+	@RequestMapping(value="parkinglot/myParkingList")
+	public Model myParkingListProcess(Model model){
+		return model;
+	}
+	
+}

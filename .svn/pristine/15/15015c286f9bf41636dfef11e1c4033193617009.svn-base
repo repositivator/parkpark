@@ -1,0 +1,73 @@
+/**
+ * @FileName	AdminInter.java
+ * @Project		boots_parkpark
+ * @Author		user
+ * @Date		2016. 2. 23.
+ *
+ *******************************************
+ * @EditHistory
+ * @Date         @Author      @Description
+ * 2016. 2. 23.      user      - 
+ *******************************************
+ */
+package member.model;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Select;
+
+import member.controller.NoticeBean;
+import parkinglot.model.S_ParkingDto;
+
+public interface AdminInter {
+	 //회원리스트(관리자용)
+	   @Select("select * from member")
+	   public List<MemberDto> selectAllMember();
+	   
+	   //후기리스트(관리자용)
+	   @Select("select * from eval")
+	   public List<ReviewDto> selectAlleval();
+	   
+	   //예약리스트(관리자용)
+	   @Select("select * from reservation")
+	   public List<ReservationDto> selectAllReservation();
+	   
+	   //주차장리스트(관리자용)
+	   @Select("select * from s_parking")
+	   public List<S_ParkingDto> selectAllParking();
+	   
+	   //공지리스트(관리자용)
+	   @Select("select * from noticeboard")
+	   public List<NoticeboardDto> selectAllnoticeboard();
+	   
+	   //회원삭제 
+	   @Delete("delete from member where code=#{code}")
+	   public boolean adminMemberDelete(String code);
+	   
+	   //후기삭제
+	   @Delete("delete from eval where code=#{code}")
+	   public boolean adminEvalDelete(String code);
+	   
+	   //공지 삭제
+	   @Delete("delete from noticeboard where code=#{code}")
+	   public boolean noticeDelete(String code);
+	   
+	   //주차장 삭세
+	   @Delete("delete from s_parking where code=#{code}")
+	   public boolean adminparkingDelete(String code);
+	   
+	   //예약 삭제
+	   @Delete("delete from reservation where code=#{code}")
+	   public boolean adminreservationDelete(String code);
+	   
+	   //회원 수정 데이터 가져오기
+	   @Select("select * from member where code=#{code}")
+	   public MemberDto getMemberData(String code);
+	   
+	   //공지 추가
+	   @Insert("Insert into noticeboard(nb_date,nb_title,nb_content) values (now(),#{nb_title},#{nb_content})")
+	   public boolean noticeInsert(NoticeBean bean);
+	   
+}

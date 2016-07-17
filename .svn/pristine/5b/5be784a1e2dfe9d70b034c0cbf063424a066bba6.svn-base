@@ -1,0 +1,87 @@
+/**
+ * @FileName   MemberController.java
+ * @Project    parkpark
+ * @Author     Jang HH
+ * @Date       2016. 1. 29.
+ *
+ *******************************************
+ * @EditHistory
+ * @Date         @Author        @Description
+ * 2016. 1. 29.  Jang HH        최초 작성
+ *******************************************
+ */
+
+package member.controller;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import member.model.DataInter;
+import member.model.ReviewDataInter;
+
+
+@Controller
+@ComponentScan("parkinglot.model")
+//@SessionAttributes({"emailKey", "codeKey", "myParkingList"}) //각각의 키로 저장된 attribute는 세션객체에 저장 됨 (2016.2.8 / 홍창표)
+public class ReviewController {
+   @Autowired
+   private parkinglot.model.DataInter dataInter; //parkinglot 패키지의 dataInter활용
+   
+   @Autowired
+   private ReviewDataInter reviewDataInter;
+   
+   //후기등록(전체 공유주차장 데이터 가져오기)
+   @RequestMapping("member/review")
+   public Model process(Model model){
+      model.addAttribute("s_parkingData",dataInter.s_listAll()); //공유주차장
+      return model;
+   }
+   
+   //후기작성form으로 넘겨준다
+   @RequestMapping(value="member/reviewint", method=RequestMethod.POST)   
+   public String reviewForm(ReviewBean bean,Model model){   
+      ReviewBean reviewBean = reviewDataInter.getParikgData(bean.getS_code());
+      model.addAttribute("s_code",reviewBean.getS_code());
+      model.addAttribute("s_address",reviewBean.getS_address());
+      model.addAttribute("s_name",reviewBean.getS_name());
+      model.addAttribute("s_image",reviewBean.getS_image());
+      ReviewBean memberBean = reviewDataInter.getMemberData(bean.getEmailKey());
+      model.addAttribute("m_code",memberBean.getM_code());
+      model.addAttribute("m_point",memberBean.getM_point());
+      model.addAttribute("m_name",memberBean.getM_name());
+      return "member/reviewInsert";
+   }
+
+   //로그인 되지 않은 상태에서 후기목록보기로 넘겨준다
+   @RequestMapping(value="parkinglot/reviewintGuest", method=RequestMethod.POST)   
+   public String reviewFormGuest(ReviewBean bean,Model model){   
+      ReviewBean reviewBean = reviewDataInter.getParikgData(bean.getS_code());
+      model.addAttribute("s_code",reviewBean.getS_code());
+      model.addAttribute("s_address",reviewBean.getS_address());
+      model.addAttribute("s_name",reviewBean.getS_name());
+      model.addAttribute("s_image",reviewBean.getS_image());
+      return "member/reviewInsert";
+   }
+   @RequestMapping(value="member/reviewinsert",method=RequestMethod.POST)
+   public String reviewInsert(ReviewBean bean,Model model){
+      reviewDataInter.reviewInsert(bean);
+      reviewDataInter.pointUpdate(bean);
+      return "redirect:../index.jsp";
+   }
+   
+   //내가 쓴 글 보기 form으로 보내준다
+   @RequestMapping(value="member/MyReview", method=RequestMethod.POST)
+   public Model myReviewForm(MemberBean bean,Model model){
+	   model.addAttribute("myreviewlist",reviewDataInter.reviewlist(bean));
+	   return model;
+   }
+   
+   //후기 수정 form으로 보내준다
+   @RequestMapping(value="myReviewUpdate",method=RequestMethod.POST)
+   public String reviewUpdateForm(ReviewBean bean,Model model){
+	   return "member/myreviewUpdate";
+   }
+}

@@ -1,0 +1,62 @@
+/**
+ * @FileName	ReviewInter.java
+ * @Project		parkpark_hh
+ * @Author		user
+ * @Date		2016. 2. 12.
+ *
+ *******************************************
+ * @EditHistory
+ * @Date         @Author      @Description
+ * 2016. 2. 12.      user      - 
+ *******************************************
+ */
+package member.model;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
+import member.controller.MemberBean;
+import member.controller.ReviewBean;
+import parkinglot.controller.S_ParkingBean;
+
+public interface ReviewInter {
+	
+	//parking정보 불러오기
+	@Select("select s_parking.code as s_code,m_code,m_name,s_name,s_address,s_image from s_parking inner join member on s_parking.m_code = member.code where s_parking.code=#{s_code}")
+	public ReviewBean getParikgData(String s_code);
+	
+	//member정보 불러오기
+	@Select("select code as m_code,m_name,m_point from member where m_email=#{emailKey}")	
+	public ReviewBean getMemberData(String emailKey);
+	
+	//후기 등록
+	@Insert("insert into eval(s_code,m_code,m_name,e_date,e_score,e_content) values (#{s_code},#{m_code},#{m_name},now(),#{e_score},#{e_content})")
+	public boolean reviewInsert(ReviewBean bean);
+	
+	//후기 등록 시 2000point 지급
+	@Update("update member set m_point=#{m_point}+#{point} where m_email=#{emailKey}")
+	public boolean pointUpdate(ReviewBean bean);
+	
+	//내가 등록한 후기 보기
+	@Select("select eval.code,s_code,e_date,e_score,e_content from eval inner join member on member.code=eval.m_code where m_email=#{emailKey}")
+	public List<ReviewBean> reviewlist(MemberBean bean);
+	
+	//내가 등록한 후기 삭제
+    @Insert("delete from eval where code = #{code}")
+    public boolean reviewDelete(ReviewBean bean);
+    
+    //주차장마다 등록되어있는 후기 확인
+    @Select("select member.m_name,e_date,e_score,e_content from eval inner join member on member.code=eval.m_code where eval.s_code=#{s_code}")
+    public List<ReviewBean> parkingReviewlist(String s_code);
+    
+    //후기 수정 위해 데이터 가져오기
+    @Select("select eval.code,s_address,s_name,e_score,s_image,e_content from eval inner join s_parking on eval.s_code=s_parking.code where eval.code=#{code};")
+    public ReviewDto getReviewData(String code);
+    
+    //후기 수정
+    @Update("update eval set e_score=#{e_score},e_content=#{e_content} where code=#{code}")
+    public boolean reviewUpdate(ReviewBean bean);
+}

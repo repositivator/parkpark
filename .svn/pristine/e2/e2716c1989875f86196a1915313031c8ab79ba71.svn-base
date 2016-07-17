@@ -1,0 +1,79 @@
+/**
+ * @FileName   MemberInter.java
+ * @Project    parkpark
+ * @Author     Jang HH
+ * @Date       2016. 1. 29.
+ *
+ *******************************************
+ * @EditHistory
+ * @Date         @Author        @Description
+ * 2016. 1. 29.  Jang HH        최초 작성
+ *******************************************
+ */
+
+package member.model;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
+import member.controller.MemberBean;
+import member.controller.ReviewBean;
+import parkinglot.controller.S_ParkingBean;
+
+
+public interface MemberInter {
+   
+   //회원등록
+   @Insert("insert into member(m_name,m_email,m_passwd,m_date,m_point) values(#{m_name},#{m_email},#{m_passwd},now(),5000)")
+   public boolean memberInsert(MemberBean bean);
+   
+   //이메일 중복체크
+   @Select("select m_email from member where m_email=#{m_email}")
+   public MemberBean checkEmail(MemberBean bean);
+
+   //로그인 (sql문 수정)(2016.2.8 / 홍창표) (m_point 데이터 받아오기)(2016.02.18/HH)
+   @Select("select m_email,m_passwd,code,m_point from member where m_email=#{m_email} and m_passwd=#{m_passwd}")
+   public MemberBean loginCheck(MemberBean bean);
+   
+   //내가 등록한 주차장 목록보기(일단은 로그인시 값을 기억하도록)  (2016.02.22 이용가능시간 추가/ 홍창표) 
+   @Select("select s_parking.code as s_code, s_address, s_image, s_pay, s_income, weekday_begin_time, weekday_end_time, saturday_begin_time, saturday_end_time, holiday_begin_time, holiday_end_time from s_parking inner join member on s_parking.m_code=member.code where m_email=#{m_email}")
+   public List<MemberDto> checkParking(MemberBean bean);
+   
+  
+   
+   //비밀번호 체크(회원정보수정시)
+   @Select("select m_email,m_point from member where m_email=#{m_email} and m_passwd=#{m_passwd}")
+   public MemberBean pwdCheck(MemberBean bean);
+   
+   //회원정보수정
+   @Update("update member set m_passwd=#{m_passwd},m_name=#{m_name} where m_email=#{m_email}")
+   public boolean memberUpdate(MemberBean bean);
+   
+   //회원탈퇴
+   @Delete("delete from member where m_email=#{m_email}")
+   public boolean memberDelete(String m_email);
+   
+   //공유주차장 전체목록보기
+   @Select("select * from s_parking")
+   public List<MemberDto> selectAllS_Parking();
+   
+   //내가 예약한 주차장 보기
+   @Select("select reservation.code, s_code,s_address,s_image,s_name,r_date,r_begin_time,r_end_time,r_pay from reservation inner join s_parking on reservation.s_code = s_parking.code where reservation.m_code=#{code}")
+   public List<ReviewBean> reserlist(MemberBean bean);
+
+   //내가 등록한 주차장 삭제
+    @Insert("delete from s_parking where code = #{code}")
+    public boolean myParkingDelete(S_ParkingBean bean);
+
+   //공유주차장등록 (2016.02.22 예약시간 추가 / 홍창표)
+   @Insert("insert into s_parking(s_name, m_code, s_address, s_pay, s_image, lat, lng, weekday_begin_time, weekday_end_time, saturday_begin_time, saturday_end_time, holiday_begin_time, holiday_end_time) values(#{s_name},#{m_code},#{s_address},#{s_pay},#{s_image},#{lat},#{lng},#{weekday_begin_time},#{weekday_end_time},#{saturday_begin_time},#{saturday_end_time},#{holiday_begin_time},#{holiday_end_time})")
+   public boolean shareInsert(S_ParkingBean bean);
+
+   //공유주차장수정(2016.02.22 / 홍창표)
+   @Insert("update s_parking set s_pay = #{s_pay}, s_image = #{s_image}, weekday_begin_time = #{weekday_begin_time}, weekday_end_time = #{weekday_end_time}, saturday_begin_time = #{saturday_begin_time}, saturday_end_time = #{saturday_end_time}, holiday_begin_time = #{holiday_begin_time}, holiday_end_time=#{holiday_end_time} where code=#{code}")
+   public boolean shareModify(S_ParkingBean bean);
+}

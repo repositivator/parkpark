@@ -1,0 +1,42 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+ <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="path" value="${pageContext.request.contextPath }" /> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<script src="${path}/resources/js/reservationList.js"></script>
+<!-- jquery -->
+<script type="text/javascript" src="${path}/resources/js/jquery-1.12.0.min.js"></script>
+</head>
+<body>
+<h1>예약 목록</h1><br/>
+<!-- 수정하기 버튼의 form -->
+<form name="adminreservationUpdateForm" id="adminreservationUpdateForm" method="post" action="adminreservationUpdate">
+	<input type="hidden" name="code">
+</form>
+
+<!-- 삭제하기 버튼의 form -->
+<form name="adminreservationDeleteForm" id="adminreservationDeleteForm" method="post" action="adminreservationDelete">
+	<input type="hidden" name="code">
+</form>
+<table class="table table-striped" width="80%">
+			<tr><th>예약 코드</th><th>주차장 코드</th><th>회원코드</th><th>예약일자</th><th>예약시간</th><th>예약금액</th><th>예약관리</th></tr>
+			<c:forEach var="s" items="${reservationlist}">
+				<tr>
+					<td class=cr6aa7cc>${s.code}</td>
+					<td>${s.s_code}</td>
+					<td>${s.m_code}</td>
+					<td>${s.r_date}</td>
+					<td>${s.r_begin_time}~${s.r_end_time}</td>
+					<td>${s.r_pay }</td>
+					<td><input type="button" onclick="adminreservationUpdate(${s.code})" id="codeId${s.code}" name="adminreservationUpdate" value="수정" class="btn btn-primary"  style="background-color: #1BA4E7; border:0px;">
+ 						<input type="button" onclick="adminreservationDelete(${s.code})" id="codeid${s.code}" name="adminreservationDelete" value="삭제" class="btn btn-danger" style="border:0px;"></td></tr></td>
+				</tr>
+			</c:forEach>
+		</table>
+</body>
+</html>

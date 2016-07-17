@@ -1,0 +1,18 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<a href="admin/memberList">회원관리</a><br>
+<a href="admin/evalList">후기관리</a><br>
+<a href="admin/reservationList">예약관리</a><br>
+<a href="admin/parkingList">주차장관리</a><br>
+<a href="admin/illegalList">신고관리</a><br>
+<a href="admin/noticeboardList">공지사항관리</a><br>
+<a href="member/logout">로그아웃</a><br>
+</body>
+</html>

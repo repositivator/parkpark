@@ -1,0 +1,37 @@
+/**
+ * @FileName	AdminInter.java
+ * @Project		boots_parkpark
+ * @Author		user
+ * @Date		2016. 2. 23.
+ *
+ *******************************************
+ * @EditHistory
+ * @Date         @Author      @Description
+ * 2016. 2. 23.      user      - 
+ *******************************************
+ */
+package member.model;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Select;
+
+import parkinglot.model.S_ParkingDto;
+
+public interface AdminInter {
+	 //회원리스트(관리자용)
+	   @Select("select * from member")
+	   public List<MemberDto> selectAllMember();
+	   
+	   //후기리스트(관리자용)
+	   @Select("select * from eval")
+	   public List<ReviewDto> selectAlleval();
+	   
+	   //예약리스트(관리자용)
+	   @Select("select * from reservation")
+	   public List<ReservationDto> selectAllReservation();
+	   
+	   //주차장리스트(관리자용)
+	   @Select("select * from s_parking")
+	   public List<S_ParkingDto> selectAllParking();
+}

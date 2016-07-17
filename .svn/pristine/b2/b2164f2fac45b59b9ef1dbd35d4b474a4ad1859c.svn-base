@@ -1,0 +1,26 @@
+/**
+ * @FileName	AdminDataInter.java
+ * @Project		boots_parkpark
+ * @Author		user
+ * @Date		2016. 2. 23.
+ *
+ *******************************************
+ * @EditHistory
+ * @Date         @Author      @Description
+ * 2016. 2. 23.      user      - 
+ *******************************************
+ */
+package member.model;
+
+import java.util.List;
+
+import org.apache.shiro.dao.DataAccessException;
+
+public interface AdminDataInter {
+	 List selectAllMember() throws DataAccessException;   //회원데이터
+	 List selectAlleval() throws DataAccessException;   //후기데이터 
+	 List selectAllReservation() throws DataAccessException;   //예약데이터 
+	 List selectAllParking() throws DataAccessException;   //주차장데이터
+	 boolean adminMemberDelete(String code) throws DataAccessException; //회원데이터 삭제
+	 boolean adminEvalDelete(String code) throws DataAccessException; //후기 데이터 삭제
+}

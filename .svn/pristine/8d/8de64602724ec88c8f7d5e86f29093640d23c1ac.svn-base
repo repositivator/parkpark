@@ -1,0 +1,82 @@
+/**
+ * @FileName	ServiceInfoController.java
+ * @Project		boots_parkpark
+ * @Author		Dave
+ * @Date		2016. 2. 22.
+ *
+ *******************************************
+ * @EditHistory
+ * @Date         @Author      @Description
+ * 2016. 2. 22.      Dave      - 
+ *******************************************
+ */
+package serviceinfo.controller;
+
+//import javax.mail.internet.MimeMessage;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.mail.javamail.JavaMailSender;
+//import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+
+
+@Controller
+public class ServiceInfoController {
+
+	// 서비스 안내 페이지 연결
+	@RequestMapping(value="serviceinfo/serviceInfo")
+	public String serviceInfoPage(){
+		return "serviceinfo/serviceInfo";
+	}
+	
+	// 자주묻는 질문 페이지 연결
+	@RequestMapping(value="serviceinfo/faq")
+	public String frequentlyAskedQuestions(){
+		return "serviceinfo/faq";
+	}
+	
+	// 1:1 문의 페이지 연결 
+	@RequestMapping(value="serviceinfo/personalContact")
+	public String personalContact(){
+		return "serviceinfo/personalContact";
+	}
+	
+	// 공지사항 페이지 연결 
+	@RequestMapping(value="serviceinfo/announceBoard")
+	public String announceBoard(){
+		return "serviceinfo/announceBoard";
+	}
+	
+
+	/*
+	// 메일 발송을 위한 메소드 (예전 버전)
+	@Autowired
+	private JavaMailSender mailSender;
+
+	@RequestMapping(value="serviceinfo/mail.do")
+	public void mailSender(){
+		try {
+				String content = "test 입니다";
+				String subject = "메일 제목입니다.";
+						"회원님의 임의 비밀번호는 ["+authNum2+"] 입니다."
+						+ "  로그인 하신 후에 회원수정에서 원하시는 비밀번호로 변경 가능합니다."
+						+ "<br/><a href='http://localhost:8080/passcode2/index.jsp'>패스코드 로그인 하러 가기</a>"; 
+									
+				MimeMessage message = mailSender.createMimeMessage();
+				MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+				messageHelper.setTo("repositivator@gmail.com");
+				//messageHelper.setText("환영합니다.");
+				message.setContent(content, "text/html; charset=utf-8");
+				messageHelper.setFrom("(주차팍팍)repositivator@gmail.com");
+				messageHelper.setSubject(subject);	// 메일제목은 생략이 가능하다
+				
+				mailSender.send(message);
+				
+		} catch(Exception e){
+			System.out.println(e);
+		}
+	}
+*/
+}
+

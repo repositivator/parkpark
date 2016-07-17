@@ -1,0 +1,57 @@
+/**
+ * @FileName	AdminController.java
+ * @Project		boots_parkpark
+ * @Author		user
+ * @Date		2016. 2. 23.
+ *
+ *******************************************
+ * @EditHistory
+ * @Date         @Author      @Description
+ * 2016. 2. 23.      user      - 
+ *******************************************
+ */
+package member.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import member.model.AdminDataInter;
+
+@Controller
+@ComponentScan("member.model")
+public class AdminController {
+	@Autowired
+	private AdminDataInter dataInter;
+	
+	//회원정보확인 -- 관리자용
+	@RequestMapping("admin/memberList")		
+	public Model process(Model model){
+		model.addAttribute("memberlist",dataInter.selectAllMember());
+		return model;
+	}
+	
+	//후기확인 -- 관리자용
+	@RequestMapping("admin/evalList")
+	public Model evalList(Model model){
+		model.addAttribute("evallist",dataInter.selectAlleval());
+		return model;
+	}
+	
+	//예약확인 -- 관리자용
+	@RequestMapping("admin/reservationList")
+	public Model reservationList(Model model){
+		model.addAttribute("reservationlist",dataInter.selectAllReservation());
+		return model;
+	}
+	
+	//주차장확인 -- 관리자용
+	@RequestMapping("admin/parkingList")
+	public Model parkingList(Model model){
+		model.addAttribute("parkinglist",dataInter.selectAllParking());
+		return model;
+	}
+	
+}

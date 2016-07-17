@@ -1,0 +1,6 @@
+@CHARSET "UTF-8";
+.cr6aa7cc {color:#856046; font-size:11px;}
+.crRed {color:red;}
+.modal-body{  max-height: 420px;
+    overflow-y: auto;}
+    

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"> 
+    <!--==========
+    	 공유자원 설정
+    	==========-->
+    	
+    <!-- mybatis DB properties 파일을 읽기-->        
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<value>classpath:/mybatis/db.properties</value>
+		</property>
+	</bean>
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+		<property name="driverClass" value="${driver}"></property>
+		<property name="url" value="${url}"></property>
+		<property name="username" value="${username}"></property>
+		<property name="password" value="${password}"></property>
+	</bean>
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<bean class = "org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="member.model.MemberInter" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+
+
+	<bean id="sqlSessionFactoryForParkingInter" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<bean class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="parkinglot.model.ParkingInter"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionFactoryForParkingInter"></property>
+	</bean>
+	
+	<!-- 2016.02.12 ReviewInter 사용을 위한 mapping -->
+	<bean id="sqlSessionFactoryForReviewInter" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<bean class = "org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="member.model.ReviewInter" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactoryForReviewInter" />
+	</bean>
+</beans>
+

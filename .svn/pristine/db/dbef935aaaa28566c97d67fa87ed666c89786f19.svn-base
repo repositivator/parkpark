@@ -1,0 +1,28 @@
+/**
+ * @FileName   ParkingBean.java
+ * @Project    parkpark
+ * @Author     Hong Changpyo
+ * @Date       2016. 1. 29.
+ *
+ *******************************************
+ * @EditHistory
+ * @Date         @Author        @Description
+ * 2016. 1. 29.  Hong Changpyo     최초 작성
+ *******************************************
+ */
+
+package parkinglot.controller;
+
+public class ParkingBean { 
+	//검색용
+	private String searchValue;
+
+	public String getSearchValue() {
+		return searchValue;
+	}
+
+	public void setSearchValue(String searchValue) {
+		this.searchValue = searchValue;
+	}
+
+}

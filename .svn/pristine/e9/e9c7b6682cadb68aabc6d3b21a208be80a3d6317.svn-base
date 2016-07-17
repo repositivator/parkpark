@@ -1,0 +1,13 @@
+function reviewUpdate(code){
+	var code = code;
+	document.getElementById("")
+	$('input[name=s_code]').attr('value',code);
+	document.reviewUpdateForm.submit();
+}
+
+function reviewDelete(code){
+	var code = code;
+	document.getElementById("")
+	$('input[name=s_code]').attr('value',code);
+	document.reviewDeleteForm.submit();
+}

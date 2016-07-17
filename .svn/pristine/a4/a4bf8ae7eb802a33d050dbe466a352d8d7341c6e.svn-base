@@ -1,0 +1,116 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+
+
+<div id="sb-site" style="min-height: 0px !important;">
+<div class="boxed">
+
+<aside id="footer-widgets" style="padding-top: 15px;padding-bottom: 40px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h3 class="footer-widget-title">사이트맵</h3>
+                <ul class="list-unstyled three_cols">
+                    <li><a href="index.html">메인화면</a></li>
+                    <li><a href="blog.html">주차장 찾기</a></li>
+                    <li><a href="portfolio_sidebar.html">주차장 예약</a></li>
+                    <li><a href="portfolio_topvar.html">마이페이지</a></li>
+                    <li><a href="page_timeline_left.html">주차장 등록</a></li>
+                    <li><a href="page_pricing.html">내 주차장 관리</a></li>
+                    <li><a href="page_about2.html">예약 관리</a></li>
+                    <li><a href="page_team.html">서비스 소개</a></li>
+                    <li><a href="page_services.html">로그인</a></li>
+                    <li><a href="page_support.html">자주묻는 질문</a></li>
+                    <li><a href="page_login_full.html">1:1 문의</a></li>
+                </ul>
+                <h3 class="footer-widget-title">소식 받아보기</h3>
+                <p>주차팍팍의 새로운 소식을 전해드립니다!</p> 
+				<p style="margin-top: -10px;">이메일로 이벤트와 할인 소식을 꼼꼼히 챙겨드려요!</p>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Email Address">
+                    <span class="input-group-btn">
+                        <button class="btn btn-ar btn-primary" type="button">소식 받아보기</button>
+                    </span>
+                </div><!-- /input-group -->
+            </div>
+            <div class="col-md-4">
+                <div class="footer-widget">
+                    <h3 class="footer-widget-title">최근 후기</h3>
+                    <div class="media">
+                        <a class="pull-left" href="#"><img class="media-object" src="<%=request.getContextPath() %>/bootstrap/assets/img/demo/m2.jpg" width="75" height="75" alt="image"></a>
+                        <div class="media-body">
+                            <h4 class="media-heading"><a href="#">간단히 주차장만 쓰려고 다운로드 받았는데 요새는 수입도 쏠쏠하게 받고 있네요!</a></h4>
+                            <small>August 18, 2015</small>
+                        </div>
+                    </div>
+                    <div class="media">
+                        <a class="pull-left" href="#"><img class="media-object" src="<%=request.getContextPath() %>/bootstrap/assets/img/demo/m11.jpg" width="75" height="75" alt="image"></a>
+                        <div class="media-body">
+                            <h4 class="media-heading"><a href="#">공연할 때마다 애써서 주차장을 찾으려고 헤매이지 않아도 되니 정말 편합니다.</a></h4>
+                            <small>September 14, 2015</small>
+                        </div>
+                    </div>
+                    <div class="media">
+                        <a class="pull-left" href="#"><img class="media-object" src="<%=request.getContextPath() %>/bootstrap/assets/img/demo/m4.jpg" width="75" height="75" alt="image"></a>
+                        <div class="media-body">
+                            <h4 class="media-heading"><a href="#">바닷가 가까이에도 이렇게 저렴한 주차장이 있다니! 고마워요 주차팍팍!!</a></h4>
+                            <small>October 9, 2015</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="footer-widget">
+                    <h3 class="footer-widget-title">새로 등록된 주차장</h3>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-3 col-xs-6">
+                            <a href="#" class="thumbnail"><img src="<%=request.getContextPath() %>/bootstrap/assets/img/parking_lot_main_1.jpg" class="img-responsive" alt="Image"></a>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-3 col-xs-6">
+                            <a href="#" class="thumbnail"><img src="<%=request.getContextPath() %>/bootstrap/assets/img/parking_lot_main_2.jpg" class="img-responsive" alt="Image"></a>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-3 col-xs-6">
+                            <a href="#" class="thumbnail"><img src="<%=request.getContextPath() %>/bootstrap/assets/img/parking_lot_main_3.jpg" class="img-responsive" alt="Image"></a>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-3 col-xs-6">
+                            <a href="#" class="thumbnail"><img src="<%=request.getContextPath() %>/bootstrap/assets/img/parking_lot_main_4.jpg" class="img-responsive" alt="Image"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- row -->
+    </div> <!-- container -->
+</aside> <!-- footer-widgets -->
+<footer id="footer" style="padding-top: 40px;padding-bottom: 40px;">
+	<p style="margin-bottom: 3px;">(주)주차팍팍 | 서울특별시 강남구 역삼동 819-10 세경빌딩 3층 | help@parkpark.com | 02-4213-2145</p>
+	<p style="margin-bottom: 3px;">사업자등록번호 123-45-67891 | 대표이사 주차팍 | 개인정보책임자 박주차 </p>
+	<p> © 2016 <a href="#">ParkPark</a>,Inc. All Rights Reserved</p>
+</footer>
+
+</div> <!-- boxed -->
+</div> <!-- sb-site -->
+
+
+<div id="back-top">
+    <a href="#header"><i class="fa fa-chevron-up"></i></a>
+</div>
+<%-- 
+<!-- Scripts -->
+
+<script src="<%=request.getContextPath() %>/bootstrap/assets/js/vendors.js"></script>
+
+<!-- Syntaxhighlighter -->
+<script src="<%=request.getContextPath() %>/bootstrap/assets/js/syntaxhighlighter/shCore.js"></script>
+<script src="<%=request.getContextPath() %>/bootstrap/assets/js/syntaxhighlighter/shBrushXml.js"></script>
+<script src="<%=request.getContextPath() %>/bootstrap/assets/js/syntaxhighlighter/shBrushJScript.js"></script>
+
+<script src="<%=request.getContextPath() %>/bootstrap/assets/js/DropdownHover.js"></script>
+<script src="<%=request.getContextPath() %>/bootstrap/assets/js/app.js"></script>
+<script src="<%=request.getContextPath() %>/bootstrap/assets/js/home_full.js"></script>
+<script src="<%=request.getContextPath() %>/bootstrap/assets/js/carousels.js"></script>
+ --%>
+</body>
+
+</html>
+    

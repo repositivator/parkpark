@@ -1,0 +1,9 @@
+package serviceinfo.model;
+
+import java.util.List;
+
+import org.apache.shiro.dao.DataAccessException;
+
+public interface ServiceDataInter {
+	List selectAllnoticeboard() throws DataAccessException; //후기데이터
+}

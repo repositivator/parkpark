@@ -1,0 +1,330 @@
+<%@page import="org.hibernate.validator.internal.util.privilegedactions.GetAnnotationParameter"%>
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="path" value="${pageContext.request.contextPath }" />  
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>주차팍팍 - 주차, 이제 팍!팍! 빠르게 해버리자</title>
+
+    <link rel="shortcut icon" href="<%=request.getContextPath() %>/bootstrap/assets/img/favicon.png" />
+
+    <meta name="description" content="">
+
+    <!-- CSS -->
+    <link href="<%=request.getContextPath() %>/bootstrap/assets/css/preload.css" rel="stylesheet">
+     
+    <!-- Compiled in vendors.js -->
+    <!--
+    <link href="<%=request.getContextPath() %>/bootstrap/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<%=request.getContextPath() %>/bootstrap/assets/css/bootstrap-switch.min.css" rel="stylesheet">
+    <link href="<%=request.getContextPath() %>/bootstrap/assets/css/font-awesome.min.css" rel="stylesheet">
+    <link href="<%=request.getContextPath() %>/bootstrap/assets/css/animate.min.css" rel="stylesheet">
+    <link href="<%=request.getContextPath() %>/bootstrap/assets/css/slidebars.min.css" rel="stylesheet">
+    <link href="<%=request.getContextPath() %>/bootstrap/assets/css/lightbox.css" rel="stylesheet">
+    <link href="<%=request.getContextPath() %>/bootstrap/assets/css/jquery.bxslider.css" rel="stylesheet" />
+    <link href="<%=request.getContextPath() %>/bootstrap/assets/css/buttons.css" rel="stylesheet">
+    -->
+
+    <link href="<%=request.getContextPath() %>/bootstrap/assets/css/vendors.css" rel="stylesheet">
+    <link href="<%=request.getContextPath() %>/bootstrap/assets/css/syntaxhighlighter/shCore.css" rel="stylesheet" >
+
+    <link href="<%=request.getContextPath() %>/bootstrap/assets/css/style-blue5.css" rel="stylesheet" title="default">
+    <link href="<%=request.getContextPath() %>/bootstrap/assets/css/width-full.css" rel="stylesheet" title="default">
+
+    
+    <!-- Custom Fonts -->
+    <link href="<%=request.getContextPath() %>/bootstrap/assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <!-- Font -->
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/earlyaccess/nanumgothic.css">
+
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="<%=request.getContextPath() %>/bootstrap/assets/js/html5shiv.min.js"></script>
+        <script src="<%=request.getContextPath() %>/bootstrap/assets/js/respond.min.js"></script>
+    <![endif]-->
+    
+    <!-- jquery -->
+    <script type="text/javascript" src="${path}/resources/js/jquery-1.12.0.min.js"></script>
+    
+    <!-- 시작화면용 -->
+    <script src="${path}/resources/js/index.js"></script>
+    
+    <!-- 로그인용 -->
+    <script src="${path}/resources/js/login.js"></script>
+    
+    <!-- 회원가입용 -->
+    <script src="${path}/resources/js/membership.js"></script>
+    <link href="${path}/resources/css/membership.css" rel="stylesheet" type="text/css">
+
+<%--     <!-- 지도검색용 -->
+    <script src="${path}/resources/js/parkinglot_map.js" type="text/javascript"></script> --%>
+   
+   <!-- 예약용 -->
+    <script src="${path}/resources/js/reservation.js"></script>
+    
+    <!-- 후기용 -->
+    <script src="${path}/resources/js/reviewInsert.js"></script>
+    
+
+   
+</head>
+
+
+<!-- Preloader -->
+<div id="preloader">
+    <div id="status">&nbsp;</div>
+</div>
+
+<body>
+<!-- Login session check -->
+<%
+String emailsession = (String)session.getAttribute("emailKey"); 
+String login = "";        //로그인 or 로그아웃
+String member = "";       //회원가입 or 회원아이디
+String Modify="";		//회원정보수정시 비밀번호 입력받는 모달
+
+
+/* if(emailsession!=null){
+   login = "<a href='member/logout' style='margin-left: -21px; margin-right: -21px; padding-right: 16px;'><i class='fa fa-sign-in'></i> 로그아웃 </a>";
+   //member = "<a href='#' class='dropdown-toggle' data-toggle='dropdown' style='margin-right: -22px;'><i class='fa fa-user-plus'></i> 회원가입 </a>";
+   myPage = "<li><a href='index.html' style='font-family: Montserrat,sans-serif;font-size: 17px;'>회원정보 확인</a></li>";
+   myPage += "<li><a href='parkinglot/myParkingList' style='font-family: Montserrat,sans-serif;font-size: 17px;'>내 주차장</a></li>";
+   myPage += "<li><a href='page_about3.html' style='font-family: Montserrat,sans-serif;font-size: 17px;'>내 주차장 예약</a></li>";
+   myPage += "<li><a href='member/logout' style='font-family: Montserrat,sans-serif;font-size: 17px;'><i class= 'fa fa-sign-out'></i> &nbsp; 로그아웃</a></li>";
+}else{
+   login = "<a href='#' class='dropdown-toggle' data-toggle='dropdown' style='margin-left: -21px; margin-right: -21px; padding-right: 16px;'><i class='fa fa-sign-in'></i>로그인 </a>";
+   member = "<a href='#' class='dropdown-toggle' data-toggle='dropdown' style='margin-right: -22px;'><i class='fa fa-user-plus'></i> 회원가입 </a>";
+   myPage = "<li><a href='#' style='font-family: Montserrat,sans-serif;font-size: 17px;'><i class= 'fa fa-sign-out'></i> &nbsp; 로그인</a></li>";
+   
+} */
+
+if(emailsession!=null){
+	login = "<a href='http://localhost:8080/boots_parkpark/member/logout' style='margin-left: -21px;margin-right: -44px;padding-left: 30px;padding-right: 16px;width: 140px;height: 35px;'><i class='fa fa-sign-in'></i> &nbsp; 로그아웃 </a>";
+	//member = "<a href='#' class='dropdown-toggle' data-toggle='dropdown' style='margin-right: -22px;'><i class='fa fa-user-plus'></i> 회원가입 </a>";
+	 Modify="<a href='#' id='modify' data-toggle='modal' data-target='#pwdModal' style='font-family: Montserrat,sans-serif;font-size: 15px;'><i class='fa fa-cogs'></i> &nbsp;개인정보 수정 </a>";
+}else{
+   login = "<a href='#' class='dropdown-toggle' data-toggle='dropdown' style='margin-left: -21px; margin-right: -21px;padding-right: 20px;padding-left: 18px;margin-top: -2px;padding-bottom: 29px;height: 35px;'><i class='fa fa-sign-in'></i>&nbsp; 로그인 </a>";
+   member = "<a href='#' class='dropdown-toggle' data-toggle='dropdown' style='margin-right: -22px; margin-right: -21px;padding-right: 20px;padding-left: 18px;margin-top: -2px;padding-bottom: 29px;height: 35px;'><i class='fa fa-user-plus'></i> &nbsp; 회원가입 </a>";
+}
+%>
+
+
+
+<div id="sb-site">
+<div class="boxed">
+
+<header id="header-full-top" class="hidden-xs header-full">
+    <div class="container">
+        <div class="header-full-title" style="width: 430px;">
+
+        	<!-- 상단 로고 및 문구 -->
+        	<a href="http://localhost:8080/boots_parkpark/index.jsp"><img class="animated fadeInRight" src="<%=request.getContextPath() %>/bootstrap/assets/img/logo_blue_parkpark.png" style="width: 200px; float:left;"></a>
+        	<!-- <h1 class="animated fadeInRight" ><a href="index.html">PARK &nbsp; <span>PARK</span></a></h1> -->	
+            <a href="http://localhost:8080/boots_parkpark/index.jsp" style="text-decoration: none;">
+               <p class="animated fadeInRight" style = "font-family: Montserrat,Helvetica,Arial,sans-serif; margin-left: 210px; margin-top: 13px; color: rgba(68, 68, 68, 0.63); position: relative; text-align: left; ">
+               한 방에 해결하는 주차! <br> 내 손 안의 주차장 주차팍팍!</p>
+            </a>
+        </div>
+        <nav class="top-nav">
+            <ul class="top-nav-social hidden-sm">
+                <li><a href="#" class="animated fadeIn animation-delay-7 twitter"><i class="fa fa-twitter"></i></a></li>
+                <li><a href="#" class="animated fadeIn animation-delay-8 facebook"><i class="fa fa-facebook"></i></a></li>
+                <li><a href="#" class="animated fadeIn animation-delay-9 google-plus"><i class="fa fa-google-plus"></i></a></li>
+                <li><a href="#" class="animated fadeIn animation-delay-8 instagram"><i class="fa fa-instagram"></i></a></li>
+                <li><a href="#" class="animated fadeIn animation-delay-7 linkedin"><i class="fa fa-linkedin"></i></a></li>
+            </ul>
+
+         <!-- 로그인/로그아웃 -->
+            <div class="dropdown animated fadeInDown animation-delay-11">
+                
+                <!-- 
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"style="margin-left: -21px; margin-right: -21px; padding-right: 16px;">
+                   <i class="fa fa-sign-in"></i> login
+                </a> 
+                -->
+                <!-- session에 따라 로그인/로그아웃 표시 -->
+                <%=login%>
+                
+                <!-- 로그인 양식 -->
+                <div class="dropdown-menu dropdown-menu-right dropdown-login-box animated fadeInUp" style="margin-right: -218px;height: 159px;">
+                    <form role="form" name="loginForm" action="http://localhost:8080/boots_parkpark/loginValue" method="post" onSubmit="loginCheck(); return false">
+
+                        <div class="form-group">
+                            <div class="input-group login-input">
+                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                <input type="text" name="m_email" id="inputEmail" class="form-control" placeholder="이메일 주소">
+                            </div>
+                            <br>
+                            <div class="input-group login-input" style="margin-top: -15px;">
+                                <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                                <input type="password" name="m_passwd" id="inputPassword" class="form-control" placeholder="비밀번호">
+                            </div>
+                            <div class="checkbox pull-left">
+                               
+                                   <input type="checkbox" id="emailsave" name="emailsave" class="check"><label for="emailsave">이메일 기억하기 </label><br>
+                                   <input type="checkbox" id="autologin" name="autologin" class="check"><label for="autologin"> 자동로그인 </label>
+                                
+                                <br>
+                                <!-- <span class="cr6aa7cc lPad10" id="checkLogin">${loginValue}</span>  ajax사용해서 아이디비번확인 문구 받아오는부분 추후수정예정 --> 
+                            </div>
+                            <button type="submit" value="Login" id="btnSubmit" class="btn btn-ar btn-primary pull-right" style="width: 130px;height: 45px;font-size: 20px;font-weight: bold;">로그인</button>
+                            <div class="clearfix"></div>
+                        </div>
+                    </form>
+                </div>
+            </div> <!-- dropdown -->
+            
+            <!-- 회원가입/회원아이디 -->
+            <div class="dropdown animated fadeInDown animation-delay-11">
+               
+               <!--
+               <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="margin-right: -22px;"><i class="fa fa-user-plus"></i> 회원가입 </a>
+               -->
+               <!-- session에 따라 회원가입/회원아이디 표시 -->
+                <%=member%>
+
+
+                <!-- 회원가입 양식  -->
+               
+               <div class="dropdown-menu dropdown-menu-right dropdown-login-box animated fadeInUp" style="margin-right: -195px;">
+                    <form role="form" name="regForm" action="http://localhost:8080/boots_parkpark/memberinsert" method="post" onSubmit="inputCheck(); return false">
+                        <h4> 회원가입 </h4>
+
+                        <div class="form-group" >
+                            <div class="input-group login-input" >
+                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                <input type="text" class="form-control" name="m_email" id="m_email" size="15" maxlength="30" onKeyDown="keyCodeCheckID(event,this);" onKeyUp="jsChkID();"onBlur="DuplicateIDCheck(this);" placeholder="이메일 주소">
+                            </div>
+                            <span onclick="DuplicateIDCheck(document.regForm.m_email); return false;" class="btn btn-default">중복확인</span>
+                            <span id="checkMsgID" class="cr6aa7cc lPad10" style="font-size: 15px;vertical-align: -webkit-baseline-middle;"></span>
+                            <br>
+                            <br>
+                            <div class="input-group login-input" style="margin-top: -10px;margin-bottom: -18px;">
+                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                <input type="text" class="form-control" name="m_name" size="15" placeholder="이름">
+                            </div>
+                            <br>
+                            <span class="cr6aa7cc lPad10" style="font-size : 12px;">공백없이 8~16자의 영문/숫자를 조합해주세요.</span>
+                            <div class="input-group login-input">
+                                <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                                <input type="password" class="form-control" name="m_passwd" maxlength="16" size="15" onKeyUp="checkPwd();" onKeyDown="checkPwd();" placeholder="비밀번호">
+                            </div>
+                            <br>
+                            <div class="input-group login-input" style="margin-top: -17px;">
+                                <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                                <input type="password" class="form-control" name="repasswd" maxlength="16" size="15" onKeyUp="checkPwd();" onKeyDown="checkPwd();" placeholder="비밀번호 확인">
+                            </div>
+                            <span class="cr6aa7cc lPad10" id="checkPwd" style="font-size : 12px;"></span>
+                            <br>
+                            <div class="checkbox pull-left"style="margin-top: 0px;">
+                                <input type="checkbox" id="agreeUse" name="agreeUse" class="check" /> 
+                                   <label for="agreeUse"> 
+                                      <strong><a href="#" id="modify" style="color: #9d9d9d;padding: 0;height: 35px;border: 0px;background-color: #F3F3F3;" data-toggle="modal" data-target="#agreeUseModal">‘이용약관‘</a></strong>
+                                      에 동의 합니다.
+                                   </label>
+                                <input type="checkbox" id="agreePrivate" name="agreePrivate" class="check" /> 
+                                   <label for="agreePrivate"> 
+                                      <strong><a href="#" id="modify" style="color: #9d9d9d;padding: 0;height: 35px;border: 0px;background-color: #F3F3F3;" data-toggle="modal" data-target="#agreeagreePrivateModal">‘개인정보 취급방침‘</a></strong>
+                                      에 동의 합니다.
+                                   </label>
+                            </div>
+                            &nbsp;&nbsp;&nbsp;&nbsp; <img src="${path}/resources/img/facebook.png" id="facebook" height="40px" style="margin-bottom: -12px">&nbsp;&nbsp;
+                       <img src="${path}/resources/img/twitter.png" height="40px" style="margin-bottom: -12px">&nbsp;&nbsp;
+                       <img src="${path}/resources/img/kakaotalk.png" height="40px" style="margin-bottom: -12px">
+                            <button type="submit" class="btn btn-ar btn-primary pull-right" id="memberInsertBtn" name="memberInsertBtn" style="width: 100px;height: 40px;margin-top: 0px;margin-right: 5px;font-size: 17px;font-weight: bold;">회원가입</button>
+                            <div class="clearfix"></div>
+                        </div>
+                    </form>
+                </div>
+
+
+            </div> <!-- dropdown -->
+            
+            <div class="dropdown animated fadeInDown animation-delay-13" >
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="height: 35px;"><i class="fa fa-search"></i></a>
+                <div class="dropdown-menu dropdown-menu-right dropdown-search-box animated fadeInDown" style="border-color: #F1F1F1; background-color: #F1F1F1; margin-right: -10px;">
+                    <form action="http://localhost:8080/boots_parkpark/parkinglot/search" method="post">
+                        <div class="input-group" style="width: 355px;">
+                            <input type="text" name="searchValue" class="form-control" placeholder="주차할 지역을 입력해주세요 (구 혹은 동 입력)">
+                            <span class="input-group-btn">
+                                <button class="btn btn-ar btn-primary" style="height: 34px;" type="submit" onclick="panTo()"><i class="fa fa-search"></i></button>
+                            </span>
+                        </div><!-- /input-group -->
+                    </form>
+                </div>
+            </div> <!-- dropdown -->
+        </nav>
+    </div> <!-- container -->
+</header> <!-- header-full -->
+
+
+<nav class="navbar navbar-static-top navbar-default navbar-header-full navbar-inverse yamm" role="navigation" id="header">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <i class="fa fa-bars"></i>
+            </button>
+            <a id="ar-brand" class="navbar-brand hidden-lg hidden-md hidden-sm" href="index.html">Artificial <span>Reason</span></a>
+        </div> <!-- navbar-header -->
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="pull-right">
+            <a href="javascript:void(0);" class="sb-icon-navbar sb-toggle-right"><i class="fa fa-bars" style="margin-left: 0;padding-left: 15px;"></i></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+            
+                <li style="width: 200px; text-align: center;">
+                    <a href="http://localhost:8080/boots_parkpark/serviceinfo/serviceInfo">서비스 안내</a>
+                </li>
+                
+                <li class="dropdown" style="width: 200px; text-align: center;">
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">고객 센터</a>
+                     <ul class="dropdown-menu dropdown-menu-left animated-2x animated fadeIn">
+                      <li><a href="http://localhost:8080/boots_parkpark/serviceinfo/announceBoard" style="font-size: 15px;"><i class="fa fa-bullhorn"></i> &nbsp;공지사항 </a></li>
+                      <li><a href="http://localhost:8080/boots_parkpark/serviceinfo/faq" style="font-size: 15px;"><i class="fa fa-info-circle"></i> &nbsp;자주묻는질문</a></li>
+                      <li><a href="http://localhost:8080/boots_parkpark/serviceinfo/personalContact" style="font-size: 15px;"><i class="fa fa-quote-right"></i> &nbsp;1:1 문의</a></li>
+                    </ul>
+                </li>
+                
+                <li style="width: 200px; text-align: center;">
+                    <a href="http://localhost:8080/boots_parkpark/parkinglot/map_search" >주차장 찾기</a>
+                </li>
+                
+                <li style="width: 200px; text-align: center;">
+                    <a href="http://localhost:8080/boots_parkpark/parkinglot/registration" >주차장 등록</a>
+                </li>
+           
+                <li class="dropdown" style="width: 200px; text-align: center;">
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">마이 페이지</a>
+                     <ul class="dropdown-menu dropdown-menu-left animated-2x animated fadeIn">
+                      <li>
+                      <%=Modify %>
+                      </li>
+                      <li><a href="http://localhost:8080/boots_parkpark/parkinglot/myParkingList" style="font-size: 15px;"><i class="fa fa-wrench"></i> &nbsp;내 주차장 관리</a></li>
+                      
+                      <li>
+                      	<form name="reserForm2" action="http://localhost:8080/boots_parkpark/member/myReservation" style ="padding: 6px;padding-left: 0px;">
+                      		<input type="hidden" name="code2" value="<%=(String)session.getAttribute("codeKey")%>">
+                      		<a href="#" onclick="test(<%=(String)session.getAttribute("codeKey")%>)" style="text-decoration:none; font-family: Montserrat,sans-serif;font-size: 15px;">
+                      			<i class='fa fa-check-square-o'></i> &nbsp;내 주차장 예약
+							</a>
+						</form>
+					  </li>
+                    </ul>
+                </li>
+                
+             </ul>
+        </div><!-- navbar-collapse -->
+    </div><!-- container -->
+</nav>

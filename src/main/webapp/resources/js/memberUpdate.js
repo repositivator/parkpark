@@ -1,0 +1,80 @@
+
+function main(){
+	history.back(-1);
+}
+
+function MyReview(){
+	document.reviewForm.submit();
+}
+
+function memberDelete(){
+	if (confirm("정말 탈퇴하시겠습니까??") == true){    //확인
+	    document.deleteForm.submit();
+	}else{   //취소
+	    return;
+	}
+}
+
+
+
+function checkUpdatePwd(){
+		var frm = document.updateForm;
+		var pw1 = frm.m_passwd.value;
+		var pw2 = frm.repasswd.value;
+		var regExp1 = /^[A-Za-z0-9+]{8,16}$/;  //문자열 길이를 제한{},  8자 이상, 16자 이하의 문자열 필터링이 가능
+
+		
+		if(pw1==""||pw2==""){
+			document.getElementById('UpdatecheckPwd').style.color = "#5e0231";
+			document.getElementById('UpdatecheckPwd').innerHTML = "비밀번호 확인을 위해 다시 한번 입력해주세요.";
+		}else if(pw1!=pw2){
+			document.getElementById('UpdatecheckPwd').style.color = "red";
+			document.getElementById("memberUpdateSubmit").disabled = true;
+			document.getElementById('UpdatecheckPwd').innerHTML = "비밀번호가 동일하지 않습니다.";
+		}else if(!pw1.match(regExp1)||!pw2.match(regExp1)){
+			document.getElementById('UpdatecheckPwd').style.color = "red";
+			document.getElementById('UpdatecheckPwd').innerHTML = "비밀번호는 영문,숫자 조합 8자 이상, 16자 이하입니다. ";
+		}else if(pw1==pw2){
+			document.getElementById('UpdatecheckPwd').style.color = "#5e0231";
+			document.getElementById("memberUpdateSubmit").disabled = false;
+			document.getElementById('UpdatecheckPwd').innerHTML = "비밀번호가 확인되었습니다.";
+			
+		}
+		
+	}
+
+window.onload = function(){
+	updateForm.m_email.focus();
+	document.getElementById("memberUpdateSubmit").onclick = inputCheck;
+
+	function inputCheck(){
+		if(updateForm.m_passwd.value===""){
+			alert("비밀번호를 입력해주세요.");
+			updateForm.m_passwd.focus();
+			return;
+		}
+		
+		if (updateForm.m_passwd.value.length < 8 || updateForm.m_passwd.value.length > 16){
+			alert("비밀번호는 공백없이 8~16자입니다.");
+			updateForm.m_passwd.focus();
+			return ;
+		}
+			
+		
+		if(updateForm.m_email.value===updateForm.m_passwd.value){
+			alert("이메일과 동일한 패스워드는 사용하실 수 없습니다.");
+			updateForm.m_passwd.focus();
+			return;
+		}
+		
+		if(updateForm.m_name.value===""){
+			alert("이름을 입력해주세요.");
+			updateForm.m_name.focus();
+			return;
+		}
+
+
+		document.updateForm.submit();
+	}
+
+}

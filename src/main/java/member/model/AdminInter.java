@@ -1,0 +1,114 @@
+/**
+ * @FileName	AdminInter.java
+ * @Project		boots_parkpark
+ * @Author		user
+ * @Date		2016. 2. 23.
+ *
+ *******************************************
+ * @EditHistory
+ * @Date         @Author      @Description
+ * 2016. 2. 23.      user      - 
+ *******************************************
+ */
+package member.model;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
+import member.controller.MemberBean;
+import member.controller.NoticeBean;
+import member.controller.ReservationBean;
+import member.controller.ReviewBean;
+import parkinglot.controller.S_ParkingBean;
+import parkinglot.model.S_ParkingDto;
+
+public interface AdminInter {
+	 //회원리스트(관리자용)
+	   @Select("select * from member")
+	   public List<MemberDto> selectAllMember();
+	   
+	   //후기리스트(관리자용)
+	   @Select("select * from eval")
+	   public List<ReviewDto> selectAlleval();
+	   
+	   //예약리스트(관리자용)
+	   @Select("select * from reservation")
+	   public List<ReservationDto> selectAllReservation();
+	   
+	   //주차장리스트(관리자용)
+	   @Select("select * from s_parking")
+	   public List<S_ParkingDto> selectAllParking();
+	   
+	   //공지리스트(관리자용)
+	   @Select("select * from noticeboard")
+	   public List<NoticeboardDto> selectAllnoticeboard();
+	   
+	   //회원삭제 
+	   @Delete("delete from member where code=#{code}")
+	   public boolean adminMemberDelete(String code);
+	   
+	   //후기삭제
+	   @Delete("delete from eval where code=#{code}")
+	   public boolean adminEvalDelete(String code);
+	   
+	   //공지 삭제
+	   @Delete("delete from noticeboard where code=#{code}")
+	   public boolean noticeDelete(String code);
+	   
+	   //주차장 삭세
+	   @Delete("delete from s_parking where code=#{code}")
+	   public boolean adminparkingDelete(String code);
+	   
+	   //예약 삭제
+	   @Delete("delete from reservation where code=#{code}")
+	   public boolean adminreservationDelete(String code);
+	   
+	   //회원 수정 데이터 가져오기
+	   @Select("select * from member where code=#{code}")
+	   public MemberDto getMemberData(String code);
+	   
+	   //회원 수정
+	   @Update("update member set m_name=#{m_name},m_point=#{m_point} where code=#{code}")
+	   public boolean adminMemberUpdate(MemberBean bean);
+	   
+	   //공지 추가
+	   @Insert("Insert into noticeboard(nb_date,nb_title,nb_content) values (now(),#{nb_title},#{nb_content})")
+	   public boolean noticeInsert(NoticeBean bean);
+	   
+	   //공지 수정 데이터 가져오기
+	   @Select("select * from noticeboard where code=#{code}")
+	   public NoticeboardDto getNoticeboardData(int code);
+	   
+	   //공지 수정
+	   @Update("update noticeboard set nb_title=#{nb_title},nb_content=#{nb_content} where code=#{code}")
+	   public boolean adminNoticeboardUpdate(NoticeBean bean);
+	   
+	   //예약 수정 데이터 가져오기
+	   @Select("select * from reservation where code=#{code}")
+	   public ReservationDto getReservationData(int code);
+	   
+	   //예약 수정 adminreservationUpdate
+	   @Update("update reservation set r_date=#{r_date},r_begin_time=#{r_begin_time},r_end_time=#{r_end_time} where code=#{code}")
+	   public boolean adminreservationUpdate(ReservationBean bean);
+	   
+	   //후기 수정 데이터 가져오기
+	   @Select("select * from eval where code=#{code}")
+	   public ReviewDto getEvalData(String code);
+	   
+	   //후기수정
+	   @Update("update eval set e_score=#{e_score},e_content=#{e_content} where code=#{code}")
+	   public boolean adminEvalUpdate(ReviewBean bean);
+	   
+	   //주차장 데이터 가져오기
+	   @Select("select * from s_parking where code=#{code}")
+	   public S_ParkingDto getparkingData(int code);
+	   
+	   //주차장 수정하기
+	   @Update("update s_parking set weekday_begin_time=#{weekday_begin_time},weekday_end_time=#{weekday_end_time},saturday_begin_time=#{saturday_begin_time},saturday_end_time=#{saturday_end_time},holiday_begin_time=#{holiday_begin_time},holiday_end_time=#{holiday_end_time} where code=#{code}")
+	   public boolean adminparkingUpdate(S_ParkingBean bean);
+	   
+}

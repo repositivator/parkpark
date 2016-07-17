@@ -1,0 +1,190 @@
+<%@page import="java.io.PrintWriter"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="path" value="${pageContext.request.contextPath }" /> 
+
+
+<%
+String emailsession = (String)session.getAttribute("emailKey");
+int income_total = 0;
+int income_imsi = 0;
+   if(emailsession==null || emailsession==""){ //로그인 상태가 아니면 로그인화면으로 이동
+      // pageContext.forward("../member/login.jsp"); 포워드 방식 : 스코프에 담긴 값이 유효( request, response가 유효)
+      PrintWriter writer=response.getWriter();
+      writer.println("<script>alert('로그인 해주세요!'); location.href='../index.jsp';</script>");
+      //response.sendRedirect("../member/login"); //리다이렉트방식 : request, response가 유지되지 않음      
+   }
+
+%>
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>주차팍팍 - 주차, 이제 팍!팍! 빠르게 해버리자</title>
+<!-- jquery -->
+<script type="text/javascript" src="${path}/resources/js/jquery-1.12.0.min.js"></script>
+
+<!-- css link -->
+<link rel="stylesheet" type="text/css" href="${path}/resources/css/parkinglot_registration.css">
+
+<!-- Daum map API -->
+<script type="text/javascript" src="http://apis.daum.net/maps/maps3.js?apikey=9fc5641362c641c00674e20463dc4dcc" charset="utf-8"></script>
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link href="${path}/resources/css/test.css" rel="stylesheet" type="text/css">
+
+</head>
+
+
+
+<jsp:include page="../include_top.jsp" />
+
+<body>
+<div id="registration">
+<form name="myParkingModifyOkForm" id="myParkingModifyOkForm" enctype="multipart/form-data" method="post" action="shareModifyOk">
+<input type="hidden" id="code" name="code" value="${updateValue.code}"> 
+<input type="hidden" id="m_code" name="m_code" value="${codeKey}"> <!-- 세션에 저장된 회원코드 -->  
+<input type="hidden" name="m_email" value="${emailKey}"> <!-- 회원이메일 -->
+
+
+<h3 style="text-shadow: 0 1px 2px rgba(255,255,255,.15);font-size: 50px;font-weight: bold;margin-top: 20px;margin-left: 20%;margin-bottom: 20px;">내 주차장 정보 수정</h3>
+
+
+
+        
+
+
+<center>
+  <div style="width: 60%">
+  
+
+     <div class="col-md-12">
+         <h2 class="section-title" style="color:#38d3ff;">수정을 원하는 내용을 변경해주세요!</h2>
+     </div>
+        
+      
+		<div id="registration" class="col-md-12">
+	
+       		<div class="col-md-4">
+	            <section>
+                    <div class="form-group" style="margin-top: 30px;">
+                        <label for="InputPName" style="font-size:20px;">주차장 이름</label>
+                        <input type="text" class="form-control" id="InputPName" name="s_name" size="15" maxlength="50" placeholder="${updateValue.s_name}" >
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 30px;">
+                        <label for="InputPName2" style="font-size:20px;">주차장 주소</label>
+                        <input type="text" class="form-control" id="InputPName2" name="s_address" size="15" maxlength="50" placeholder="${updateValue.s_address}" readonly="readonly">
+                    </div>
+            
+                  	<div class="clearfix"></div>
+
+	            </section>
+	        </div>
+                    
+                    
+       		<div class="col-md-4">
+	            <section>
+                    <div class="form-group" style="margin-top: 30px;">
+                        <label for="InputPPrice" style="font-size:20px;">희망요금선택(1시간 단위)</label><br>
+               			<table>
+               				<tr>
+               					<td colspan="3">
+               						<b>최소 ${pay_avg} 원 ~ 최대 ${2.5*pay_avg} 원</b>
+               					</td>
+               				</tr>
+               				<tr>
+               					<td>최소금액</td>
+               					<td>	
+               						<input type="range" id="nowpay" name="s_pay" min="${pay_avg}" max="${2.5*pay_avg}" value="${pay_avg}" step="10" oninput="s_payOutPutId.value = '요금을 ' + nowpay.value + '원으로 선택하셨습니다.'" style="width: 90%">
+               					</td>
+               					<td>최대금액</td>
+               				<tr>
+               					<td colspan="3">
+               					<output name=”s_payOutPutName” id="s_payOutPutId"></output>
+               					</td>
+               			</table>
+                    </div>
+                    
+                    
+                    
+                    <div class="form-group" style="margin-top: 30px;">
+                        <label for="InputPPicture" style="font-size:20px;">주차장 사진 변경</label><br>	
+                        <img src="../resources/img_share/${updateValue.s_image}" style="width: 90px; height: 60px;" alt="">
+               			<input type="file" name="uploadfile" required="required"/><br/>
+               		</div>
+            
+                  	<div class="clearfix"></div>
+
+	            </section>
+	        </div>
+	        
+	        
+        	<div class="col-md-4">
+            	<section>
+            
+                    <div class="form-group" style="margin-top: 30px;">
+                        <label for="InputPTime" style="font-size:20px;">이용가능시간 설정</label>
+               			<table>
+							<tr>
+						    	<td>월~금요일</td>
+						    	<td>
+						    		<input type="text" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' style='ime-mode:disabled; width:50px;' name="weekday_begin_time" size="10" maxlength="10" value="${updateValue.weekday_begin_time}"/>시 ~ 
+						    		<input type="text" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' style='ime-mode:disabled; width:50px;' name="weekday_end_time" value="${updateValue.weekday_end_time}"/>시
+						    	</td>
+							</tr>        
+							<tr>
+							  	<td>토요일</td>
+							  	<td>
+							  		<input type="text" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' style='ime-mode:disabled; width:50px;' name="saturday_begin_time" size="10" maxlength="10" value="${updateValue.saturday_begin_time}"/>시 ~ 
+							  		<input type="text" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' style='ime-mode:disabled; width:50px;' name="saturday_end_time" value="${updateValue.saturday_end_time}"/>시
+							  	</td>
+							</tr>
+							<tr>
+							   	<td>일요일/공휴일</td>
+							   	<td>
+								   	<input type="text" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' style='ime-mode:disabled; width:50px;' name="holiday_begin_time" size="10" maxlength="10" value="${updateValue.holiday_begin_time}"/>시 ~ 
+								   	<input type="text" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' style='ime-mode:disabled; width:50px;' name="holiday_end_time"  value="${updateValue.holiday_end_time}"/>시
+							   	</td>
+							</tr>
+						</table>
+               		</div>
+               
+            	</section>
+        	</div>
+        
+
+        	<div class="col-md-12">
+            	<section>
+            
+                    <div class="form-group" style="margin-top: 20px;">
+	                    <center>
+	                    	<input type="button" value="수정완료" onclick="ValidCheck()" id="myParkingModifyBtnSubmit" class="btn btn-ar btn-primary" style="/* background-color: #1BA4E7;  */border:0px; font-size: 20px; width:200px;">
+	               			<input type="button" onclick="main()" value="홈으로" class="btn btn-ar btn-default">
+	            
+	                    	<!-- <input type="submit" class="btn btn-ar btn-primary" value="메일발송" style="font-size: 20px; width:750px;"> -->
+	                    </center>
+               		</div>
+      
+            	</section>
+        	</div>
+		        
+	</div>
+</center>
+
+</form>
+</div>
+      
+
+
+
+<div style="margin-top: 50%;padding-top: 15px;padding-bottom: 40px;">
+<!-- 본문과 Footer 사이를 띄우기 위한 div -->
+</div>
+
+<jsp:include page="../include_bottom.jsp" />

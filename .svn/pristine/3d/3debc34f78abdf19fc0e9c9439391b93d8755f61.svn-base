@@ -1,0 +1,12 @@
+function main(){
+	history.back(-1);
+}
+
+function reviewInsert(){
+	if(reviewForm.e_content.value===""){
+		alert("후기를 입력해주세요.");
+		reviewForm.e_content.focus();
+		return;
+	}
+	document.reviewForm.submit();	
+}

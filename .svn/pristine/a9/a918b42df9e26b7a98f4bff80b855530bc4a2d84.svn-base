@@ -1,0 +1,41 @@
+/**
+ * @FileName	ReviewInter.java
+ * @Project		parkpark_hh
+ * @Author		user
+ * @Date		2016. 2. 12.
+ *
+ *******************************************
+ * @EditHistory
+ * @Date         @Author      @Description
+ * 2016. 2. 12.      user      - 
+ *******************************************
+ */
+package member.model;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
+import member.controller.MemberBean;
+import member.controller.ReviewBean;
+
+public interface ReviewInter {
+	
+	@Select("select s_parking.code as s_code,m_code,m_name,s_name,s_address,s_image from s_parking inner join member on s_parking.m_code = member.code where s_parking.code=#{s_code}")
+	public ReviewBean getParikgData(String s_code);
+	
+	@Select("select code as m_code,m_name,m_point from member where m_email=#{emailKey}")	
+	public ReviewBean getMemberData(String emailKey);
+	
+	@Insert("insert into eval(s_code,m_code,m_name,e_date,e_score,e_content) values (#{s_code},#{m_code},#{m_name},now(),#{e_score},#{e_content})")
+	public boolean reviewInsert(ReviewBean bean);
+	
+	@Update("update member set m_point=#{m_point}+2000 where code=#{m_code}")
+	public boolean pointUpdate(ReviewBean bean);
+	
+	@Select("select eval.code,s_code,e_date,e_score,e_content from eval inner join member on member.code=eval.m_code where m_email=#{m_email}")
+	public List<ReviewBean> reviewlist(MemberBean bean);
+	
+}
